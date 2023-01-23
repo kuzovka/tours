@@ -8,3 +8,59 @@
 .btn {
     @apply border border-solid border-sky-900 px-4 py-2 rounded-md hover:bg-sky-700 hover:text-white transition-all duration-300;
 }
+
+.dropdown__list-item {
+    @apply border border-gray-400 px-4 py-2 cursor-pointer border-b-0 text-gray-800 hover:bg-gray-100 opacity-60;
+}
+
+.dropdown__container
+{
+    @apply flex flex-col relative mt-8;
+}
+
+.dropdown::after {
+    content: "";
+    width: 0;
+    height: 0;
+    border-width: 7px 4px 0 4px;
+    border-color: rgb(168, 166, 166) transparent transparent transparent;
+    border-style: solid;
+
+    position: absolute;
+    top: 50%;
+    right: 15px;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+.loader-container {
+    width: 100%;
+    height: 100vh;
+    background-color: rgb(158, 194, 235);
+    position: fixed;
+    top: 0;
+    z-index: 100;
+    transition: 1s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.loader {
+    width: 75px;
+    height: 75px;
+    border: 10px solid rgb(58, 144, 241);
+    border-radius: 50%;
+    border-left-color: rgb(158, 194, 235);
+    animation: loader 1.3s linear infinite;
+}
+
+@keyframes loader {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.hidden {
+    opacity: 0;
+}

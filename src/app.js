@@ -1,12 +1,19 @@
 import { format, differenceInDays } from "date-fns"
 import { ru } from "date-fns/locale"
+import { doc } from "prettier"
 
-async function getTours() {
-    const response = await fetch(
-        "https://www.bit-by-bit.ru/api/student-projects/tours"
-    )
-    const tours = await response.json()
 
+// загрузка данных с БД
+async function loadTours() {
+    const response = await fetch("https://www.bit-by-bit.ru/api/student-projects/tours")
+    const data = await response.json()
+    return data
+}
+
+
+// отрисовка туров
+function renderTours(tours) {
+    document.getElementById("container").innerHTML = ""
     tours.forEach((tour) => {
         const duration = differenceInDays(
             new Date(tour.endTime),
@@ -14,13 +21,10 @@ async function getTours() {
         )
         document.getElementById("container").innerHTML += `
         <div class="bg-white shadow-lg rounded-xl mt-8 p-4">
-                                 <div>
-
-                             <div class="h-12">
-                             <a class="font-semibold text-yellow-600 hover:underline">${
-                                 tour.hotelName
-                             }</a>
-                             </div>
+            <div>
+                <div class="h-12">
+                     <a class="font-semibold text-yellow-600 hover:underline">${tour.hotelName}</a>
+                </div>
                              <p
                                  class="font-normal text-sky-900 mb-2 mt-2"
                              >
@@ -85,7 +89,126 @@ async function getTours() {
                          </div>
                     </div>
         `
-    })
+})
 }
 
-getTours()
+//  dropdown по стране и рейтингу
+document.querySelectorAll(".dropdown__container").forEach(function (dropdownWrapper) {
+    const dropdownBtn = dropdownWrapper.querySelector(".dropdownButton");
+    const dropdownList = dropdownWrapper.querySelector(".dropdownList");
+    const dropdownListItems = dropdownList.querySelectorAll(".dropdown__list-item")
+
+// откыть dropdowns
+    dropdownBtn.addEventListener("click", function () {
+        dropdownList.style.display = "block"
+})
+
+// заполнить dropdowns выбранным значением и закрыть список
+    dropdownListItems.forEach(function (listItem) {
+        listItem.addEventListener("click", function () {
+            dropdownBtn.innerText = this.innerText
+            dropdownList.style.display = "none"
+    })
+})
+
+// скрыть dropdown если клик не по кнопке
+document.addEventListener("click", function (event) {
+    if (event.target !== dropdownBtn) {
+        dropdownList.style.display = "none"
+    }
+})
+
+})
+
+
+// фильтр по странам
+
+function filtredByCountry(tours, country) {
+    if (country) {
+        const filtredTours = tours.filter((tour) => {
+            return tour.country === country
+        })
+        renderTours(filtredTours)
+    } else {
+        renderTours(tours)
+    }
+}
+
+// фильтр по рейтингу
+
+function filtredByRating(tours, rating) {
+    if (rating) {
+        const filtredTours = tours.filter((tour) => {
+            return tour.rating >= rating
+        })
+        renderTours(filtredTours)
+    } else {
+        renderTours(tours)
+    }
+}
+
+// фильтр по цене
+
+function filterByPrice(tours, price) {
+    const minPrice = document.getElementById("minPrice").value
+    const maxPrice = document.getElementById("maxPrice").value
+
+    const filteredTours = tours.filter((tour) => {
+        if (minPrice && maxPrice) {
+            return tour.price >= minPrice && tour.price <= maxPrice
+        } else if (minPrice) {
+            return tour.price >= minPrice
+        } else if (maxPrice) {
+            return tour.price <= maxPrice
+        } else {
+            renderTours(tours)
+        }
+    })
+
+    renderTours(filteredTours)
+
+    document.getElementById("minPrice").value = ""
+    document.getElementById("maxPrice").value = ""
+}
+
+
+// загрузка страницы
+async function init() {
+    const tours = await loadTours()
+    renderTours(tours)
+
+    document.getElementById("allCountries").addEventListener("click", () => filtredByCountry(tours))
+    document.getElementById("tailand").addEventListener("click", () => filtredByCountry(tours, "Тайланд"))
+    document.getElementById("egypt").addEventListener("click", () => filtredByCountry(tours, "Египет"))
+    document.getElementById("cyprus").addEventListener("click", () => filtredByCountry(tours, "Кипр"))
+    document.getElementById("maldives").addEventListener("click", () => filtredByCountry(tours, "Мальдивы"))
+    document.getElementById("indonesia").addEventListener("click", () => filtredByCountry(tours, "Индонезия"))
+    document.getElementById("mexico").addEventListener("click", () => filtredByCountry(tours, "Мексика"))
+    document.getElementById("tanzania").addEventListener("click", () => filtredByCountry(tours, "Танзания"))
+
+
+    document.getElementById("allRating").addEventListener("click", () => filtredByRating(tours))
+    document.getElementById("rating7").addEventListener("click", () => filtredByRating(tours, 7))
+    document.getElementById("rating8").addEventListener("click", () => filtredByRating(tours, 8))
+    document.getElementById("rating9").addEventListener("click", () => filtredByRating(tours, 9))
+
+    document.getElementById("priceButton").addEventListener("click", () => filterByPrice(tours))
+
+
+
+
+}
+
+// loader
+
+let loader = document.getElementById("loader")
+window.addEventListener("load", () => {
+    loader.classList.add("hidden")
+    setTimeout(() => {
+        loader.remove()
+    }, 1000)
+})
+
+
+init()
+
