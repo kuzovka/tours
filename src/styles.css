@@ -6,15 +6,14 @@
     @apply flex justify-center gap-2 mt-4;
 }
 .btn {
-    @apply border border-solid border-sky-900 px-4 py-2 rounded-md hover:bg-sky-700 hover:text-white transition-all duration-300;
+    @apply border border-solid border-sky-900 px-4 py-2 rounded-md hover:bg-sky-700 hover:text-white transition-all duration-300 text-sm;
 }
 
 .dropdown__list-item {
     @apply border border-gray-400 px-4 py-2 cursor-pointer border-b-0 text-gray-800 hover:bg-gray-100 opacity-60;
 }
 
-.dropdown__container
-{
+.dropdown__container {
     @apply flex flex-col relative mt-8;
 }
 
@@ -63,4 +62,63 @@
 
 .hidden {
     opacity: 0;
+}
+
+.backgroud-modal {
+    position: fixed;
+    padding-top: 100px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(36, 36, 36, 0.4);
+    display: none;
+}
+
+.modal {
+    position: relative;
+    background-color: #ffffff;
+    margin: auto;
+    padding-top: 10px;
+    border: 2px solid #e49e36;
+    border-radius: 10px;
+    width: 50%;
+    box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.2);
+    padding-bottom: 20px;
+}
+
+.modal-btn {
+    position: absolute;
+    top: -27px;
+    right: -28px;
+    color: rgba(255, 255, 255, 0.712);
+}
+
+.form-group {
+    padding-bottom: 15px;
+}
+
+.form-input {
+    display: block;
+    padding: 7px 10px;
+    border: 1 solid rgb(12 74 110);
+    font-family: inherit;
+}
+
+.form-input:focus {
+    outline: none;
+    border-width: 2px;
+}
+
+.textarea {
+    width: 80%;
+    height: 150px;
+    border: 1 solid rgb(12 74 110);
+    padding: 7px 10px;
+}
+
+.textarea:focus {
+    outline: none;
+    border-width: 2px;
 }
