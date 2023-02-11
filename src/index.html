@@ -113,9 +113,9 @@
                         <div class="pl-6  text-gray-800 flex flex-col items-center pr-5">
                             <p>Укажите стоимость:</p>
                             <div class="flex mt-3">
-                                <input id="minPrice" type="number" placeholder="от" class=" border border-solid border-sky-900 text-center rounded-md mr-2 h-8">
+                                <input id="minPrice" type="number" placeholder="от" class=" border border-solid border-sky-900 text-center rounded-md mr-2 h-8 outline-none">
                                 <span> </span>
-                                <input id="maxPrice" type="number" placeholder="до" class="border border-solid border-sky-900 text-center rounded-md h-8">
+                                <input id="maxPrice" type="number" placeholder="до" class="border border-solid border-sky-900 text-center rounded-md h-8 outline-none">
                             </div>
                             <button id="priceButton" class="btn my-3">Применить</button>
 
@@ -132,13 +132,13 @@
                 </div>
             </div>
 
-            <div class="backgroud-modal" id="modalWindowId">
+            <div class="backgroud-modal" id="modalWindow">
                 <div class="modal grid grid-cols-2 px-10 gap-5">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-10 h-10 hover:w-12 hover:h-12 modal-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-10 h-10 hover:w-12 hover:h-12 modal-btn" id="modal-btn">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                    <div class="bg-white shadow-lg rounded-xl mt-8 p-4">
-                        <div>
+                    <div class="bg-white shadow-lg rounded-xl mt-8 p-4" id="tourCard">
+                        <!-- <div>
                             <div class="h-12">
                                  <a class="font-semibold text-yellow-600 hover:underline" id="hotelName">название отеля</a>
                             </div>
@@ -162,10 +162,10 @@
                                 </svg>
                                 <p class="font-normal text-gray-800 text-m" id="rating">рейтинг</p>
                             </div>
-                        </div>
+                        </div> -->
 
                     </div>
-                    <form class="form py-9">
+                    <form class="form py-9" id="form">
                         <h1 class="text-l font-semibold text-sky-900 mb-5">Для бронирования тура укажите Ваши данные:</h1>
                         <div class="form-group">
                             <label for="inputName" class="font-normal text-l text-gray-800 ">Фамилия, имя:</label>
@@ -181,9 +181,10 @@
                         </div>
                         <div class="form-group">
                             <label for="textarea" class="font-normal text-l text-gray-800"></label>Ваши комментарии к выбранному туру:</label>
-                            <textarea name="comments"class="textarea rounded-md"></textarea>
+                            <textarea name="comments"class="textarea rounded-md" id="textarea"></textarea>
                         </div>
                         <button type="submit" class="btn" id="modalWindowButton">Забронировать тур</button>
+                        <button type="submit" class="btn" id="CloseModalWindowButton">Отменить</button>
                     </form>
 
                 </div>
