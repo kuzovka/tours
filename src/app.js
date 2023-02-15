@@ -2,12 +2,16 @@ import { format, differenceInDays } from "date-fns"
 import { ru } from "date-fns/locale"
 import { doc } from "prettier"
 
+let tours = []
+
 // загрузка данных с БД
 async function loadTours() {
     const response = await fetch(
         "https://www.bit-by-bit.ru/api/student-projects/tours"
     )
     const data = await response.json()
+
+    tours = data
     return data
 }
 
@@ -20,7 +24,7 @@ function renderTours(tours) {
             new Date(tour.startTime)
         )
         document.getElementById("container").innerHTML += `
-        <div class="bg-white shadow-lg rounded-xl mt-8 p-4">
+        <div class="bg-white shadow-lg rounded-xl mt-8 p-4" id="tour">
             <div>
                 <div class="h-12">
                      <a class="font-semibold text-yellow-600 hover:underline">${
@@ -88,7 +92,7 @@ function renderTours(tours) {
                          <div class="btn-container">
                              <button class="btn" id="openModalButton-${tour.id}"
                              }">Забронировать</button>
-                             <button class="btn">Добавить в избранное</button>
+                             <button class="btn2" id="button-addFavorite-${tour.id}">Добавить в избранное</button>
                          </div>
                     </div>
         `
@@ -117,7 +121,7 @@ let currentId
 async function openModalWindow(id) {
 
     const response = await fetch('https://www.bit-by-bit.ru/api/student-projects/tours');
-    const tours = await response.json()
+    tours = await response.json()
 
     modalWindow.style.display = "flex"
 
@@ -321,4 +325,56 @@ async function sendFormData(event) {
 
 }
 
+let tour = document.getElementById("tour")
+
+
+//const findButton = document.getElementById("button-addFavorite-${tour.id}")
+
+/*  function saveToLocalStorage() {
+
+    const toursJson = JSON.stringify(tours); 
+    localStorage.setItem("tours", toursJson); 
+}
+
+const toursJson = localStorage.getItem("tours"); //преобразование из JSON в JS
+
+if (toursJson) {
+  tours = JSON.parse(toursJson);
+}  */
+
+
+//отобразить все туры по клику
+let buttonAllTours = document.getElementById("allToursBtn")
+
+buttonAllTours.addEventListener("click", () => {
+     renderTours(tours)
+} )
+
+let favoriteTours = [] //массив с любимыми турами
+
+tours.forEach((tour) => {
+    
+let buttonAddToFavorite = document.getElementById(`button-addFavorite-${tour.id}`) //нахожу кнопку каждого тура
+buttonAddToFavorite.addEventListener("click", () => {
+
+    const tour = tours.find((findTour) => { //находим нужный тур
+        return findTour.id === id //находим id тура
+    })
+    favoriteTours.push(tour) //добавляем тур в любимые
+    
+    let allFavoritesTours = document.getElementById("favoriteToursBtn")    //находим "показать избранные туры"
+    allFavoritesTours.addEventListener("click", () => {
+        renderTours(favoriteTours)
+    })
+})
+})
+
+
+
+
+
+
+//Ы
+
+ 
 init()
