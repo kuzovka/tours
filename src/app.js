@@ -344,29 +344,30 @@ if (toursJson) {
 
 
 //отобразить все туры по клику
-let buttonAllTours = document.getElementById("allToursBtn")
+let buttonAllTours = document.getElementById("allToursBtn");
 
 buttonAllTours.addEventListener("click", () => {
-     renderTours(tours)
-} )
+  renderTours(tours);
+});
 
 let favoriteTours = [] //массив с любимыми турами
 
 tours.forEach((tour) => {
-    
-let buttonAddToFavorite = document.getElementById(`button-addFavorite-${tour.id}`) //нахожу кнопку каждого тура
-buttonAddToFavorite.addEventListener("click", () => {
+  let buttonAddToFavorite = document.getElementById(`button-addFavorite-${tour.id}`) //нахожу кнопку каждого тура
 
-    const tour = tours.find((findTour) => { //находим нужный тур
-        return findTour.id === id //находим id тура
-    })
-    favoriteTours.push(tour) //добавляем тур в любимые
-    
-    let allFavoritesTours = document.getElementById("favoriteToursBtn")    //находим "показать избранные туры"
-    allFavoritesTours.addEventListener("click", () => {
-        renderTours(favoriteTours)
-    })
+  tour = tours.find((findTour) => { //находим нужный тур
+
+    return findTour.id === id //находим id тура
 })
+
+  buttonAddToFavorite.addEventListener("click", () => {
+    favoriteTours.push(tour) //добавляем тур в любимые
+  })
+})
+
+let allFavoritesTours = document.getElementById("favoriteToursBtn"); //находим "показать избранные туры"
+allFavoritesTours.addEventListener("click", () => {
+  renderTours(favoriteTours)
 })
 
 
