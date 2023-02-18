@@ -122,3 +122,18 @@
     outline: none;
     border-width: 2px;
 }
+
+
+@media (max-width: 640px) {
+
+    .price-container  {
+        flex-direction: column;
+    }
+    .minPrice-input {
+        margin-bottom: 10px;
+    }
+    .modal {
+        min-width: 60%;
+    }
+
+}
