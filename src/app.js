@@ -1,6 +1,7 @@
 import { format, differenceInDays } from "date-fns"
 import { ru } from "date-fns/locale"
 import { doc } from "prettier"
+import swal from "sweetalert"
 
 // загрузка данных с БД
 async function loadTours() {
@@ -93,10 +94,11 @@ function renderTours(tours) {
                     </div>
         `
     })
-// открытие модального окна для бронирования
+    // открытие модального окна для бронирования
     tours.forEach((tour) => {
-        document.getElementById(`openModalButton-${tour.id}`).addEventListener("click", () =>
-        openModalWindow(tour.id))
+        document
+            .getElementById(`openModalButton-${tour.id}`)
+            .addEventListener("click", () => openModalWindow(tour.id))
     })
 }
 
@@ -104,8 +106,8 @@ const modalWindow = document.getElementById("modalWindow")
 const closeModalWindow = document.getElementById("CloseModalWindowButton")
 const closeModalXButton = document.getElementById("modal-btn")
 
-closeModalWindow.addEventListener('click', closeModal)
-closeModalXButton.addEventListener('click', closeModal)
+closeModalWindow.addEventListener("click", closeModal)
+closeModalXButton.addEventListener("click", closeModal)
 
 function closeModal() {
     modalWindow.style.display = "none"
@@ -115,26 +117,33 @@ let currentId
 
 // окно для бронирования
 async function openModalWindow(id) {
-
-    const response = await fetch('https://www.bit-by-bit.ru/api/student-projects/tours');
+    const response = await fetch(
+        "https://www.bit-by-bit.ru/api/student-projects/tours"
+    )
     const tours = await response.json()
 
     modalWindow.style.display = "flex"
 
-    const currentTour = tours.find(t => t.id === id)
+    const currentTour = tours.find((t) => t.id === id)
     document.getElementById("tourCard").innerHTML = ""
     document.getElementById("tourCard").innerHTML += `
                          <div>
                              <img
-                                 class="h-72 w-full  rounded-md mb-5"
+                                 class="h-72 w-80  rounded-md mb-5"
                                  src="${currentTour.image}"
                                  alt=""/>
                         </div>
                         <div>
-                            <a class="font-semibold text-yellow-600 hover:underline">${currentTour.hotelName}</a>
+                            <a class="font-semibold text-yellow-600 hover:underline">${
+                                currentTour.hotelName
+                            }</a>
                         </div>
                         <p class="font-normal text-sky-900 my-2">
-                                ${currentTour.city ? `<a href="#">${currentTour.city},</a>` : ""}
+                                ${
+                                    currentTour.city
+                                        ? `<a href="#">${currentTour.city},</a>`
+                                        : ""
+                                }
                                 <a href="#">${currentTour.country}</a>
                                 </p>
                            </div>
@@ -158,25 +167,26 @@ async function openModalWindow(id) {
 
                          <div>
                              <p class="font-normal text-gray-800 text-m my-2">
-                             Стоимость тура: ${currentTour.price.toLocaleString("ru", {
-                                 style: "currency",
-                                 currency: "rub",
-                                 currencyDisplay: "code",
-                                 minimumFractionDigits: 0
-                             })}
+                             Стоимость тура: ${currentTour.price.toLocaleString(
+                                 "ru",
+                                 {
+                                     style: "currency",
+                                     currency: "rub",
+                                     currencyDisplay: "code",
+                                     minimumFractionDigits: 0
+                                 }
+                             )}
                              </p>
-
                          </div>
-
-
 
     `
     currentId = id
-
 }
 
 //  dropdown по стране и рейтингу
-document.querySelectorAll(".dropdown__container").forEach(function (dropdownWrapper) {
+document
+    .querySelectorAll(".dropdown__container")
+    .forEach(function (dropdownWrapper) {
         const dropdownBtn = dropdownWrapper.querySelector(".dropdownButton")
         const dropdownList = dropdownWrapper.querySelector(".dropdownList")
         const dropdownListItems = dropdownList.querySelectorAll(
@@ -185,21 +195,21 @@ document.querySelectorAll(".dropdown__container").forEach(function (dropdownWrap
 
         // откыть dropdowns
         dropdownBtn.addEventListener("click", function () {
-            dropdownList.classList.remove('hidden')
+            dropdownList.classList.remove("hidden")
         })
 
         // заполнить dropdowns выбранным значением и закрыть список
         dropdownListItems.forEach(function (listItem) {
             listItem.addEventListener("click", function () {
                 dropdownBtn.innerText = this.innerText
-                dropdownList.classList.add('hidden')
+                dropdownList.classList.add("hidden")
             })
         })
 
         // скрыть dropdown если клик не по кнопке
         document.addEventListener("click", function (event) {
             if (event.target !== dropdownBtn) {
-                dropdownList.classList.add('hidden')
+                dropdownList.classList.add("hidden")
             }
         })
     })
@@ -254,6 +264,64 @@ function filterByPrice(tours, price) {
     document.getElementById("maxPrice").value = ""
 }
 
+// // loader
+
+let loader = document.getElementById("loader")
+window.addEventListener("load", () => {
+    loader.classList.add("hidden")
+    setTimeout(() => {
+        loader.remove()
+    }, 1000)
+})
+
+// отправка формы бронирования
+document
+    .getElementById("bookingTourButton")
+    .addEventListener("click", sendFormData)
+
+async function sendFormData(event) {
+    event.preventDefault()
+
+    let name = document.getElementById("inputName")
+    let phone = document.getElementById("inputTel")
+    let email = document.getElementById("inputEmail")
+    let comment = document.getElementById("textarea")
+
+    const params = {
+        customerName: name.value,
+        phone: phone.value,
+        email: email.value,
+        description: comment.value
+    }
+
+    const url = `https://www.bit-by-bit.ru/api/student-projects/tours/${currentId}`
+
+    let response = await fetch(url, {
+        method: "POST",
+        body: JSON.stringify(params)
+    })
+
+    try {
+        let data = await response.json()
+
+        if (data) {
+            swal({
+                title: "Поздравляем, тур успешно забронирован!",
+                text: "Мы сроко свяжемся с Вами!",
+                icon: "success",
+                buttons: false
+            })
+        }
+    } catch {
+        swal({
+            title: "Ошибка!",
+            text: "Проверьте корректность введенных Вами данных!",
+            icon: "error",
+            buttons: false
+        })
+    }
+}
+
 // загрузка страницы
 async function init() {
     const tours = await loadTours()
@@ -300,68 +368,6 @@ async function init() {
     document
         .getElementById("priceButton")
         .addEventListener("click", () => filterByPrice(tours))
-}
-
-// // loader
-
-let loader = document.getElementById("loader")
-window.addEventListener("load", () => {
-    loader.classList.add("hidden")
-    setTimeout(() => {
-        loader.remove()
-    }, 1000)
-})
-
-// отправка формы пронирования. НЕ ЗАВЕРШЕНО
-document.getElementById('bookingTourButton').addEventListener("click", sendFormData)
-
-async function sendFormData(event) {
-    event.preventDefault()
-
-    let name = document.getElementById('inputName')
-    let phone = document.getElementById('inputTel')
-    let email = document.getElementById('inputEmail')
-    let comment = document.getElementById('textArea')
-
-    const params = {
-        customerName: name.value,
-        phone: phone.value,
-        email: email.value,
-        description: comment.value
-    }
-
-    const url = `https://www.bit-by-bit.ru/api/student-projects/tours/${currentId}`
-
-    let response = await fetch(url, {
-        method: "POST",
-        body: JSON.stringify(params)
-    })
-
-    try {
-        let data = await response.json()
-
-        if (data) {
-            Swal.fire({
-                position: 'center',
-                icon: 'success',
-                title: 'Тур успешно забронирован, мы сроко свяжемся с Вами!',
-                showConfirmButton: false,
-                timer: 3000
-              })
-
-        }
-    } catch {
-        Swal.fire({
-            position: 'center',
-            icon: 'error',
-            title: 'Проверьте корректность введенных Вами данных!!',
-            showConfirmButton: false,
-            timer: 3000
-          })
-    }
-
-
-
 }
 
 init()
