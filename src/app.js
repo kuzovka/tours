@@ -140,10 +140,10 @@ function renderTours(tours) {
          buttonCancelFromFavorite.addEventListener("click", () => {
 
             let tourDelete = tours.find((findTour) => {
-                return findTour.id === id; //найти книгу по id
+                return findTour.id === id; 
               });
               let tourIndex = tours.indexOf(tourDelete); 
-            tours.splice(tourIndex, 1) //
+            tours.splice(tourIndex, 1) 
          
 
         })
