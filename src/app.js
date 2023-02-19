@@ -142,6 +142,7 @@ function renderTours(tours) {
             favoriteTours.splice(tour.id) //добавляем тур в любимые
 
         })
+        saveToLocalStorage()
     })
     }
 
@@ -280,6 +281,7 @@ function filterByPrice(tours, price) {
     })
 
     renderTours(filteredTours)
+    
 
     document.getElementById("minPrice").value = ""
     document.getElementById("maxPrice").value = ""
@@ -291,6 +293,7 @@ function filterByPrice(tours, price) {
 async function init() {
     const tours = await loadTours()
     renderTours(tours)
+    saveToLocalStorage()
 
     let allFavoritesTours = document.getElementById("favoriteToursBtn") //находим "показать избранные туры"
     allFavoritesTours.addEventListener("click", () => {
@@ -300,6 +303,7 @@ async function init() {
             document.getElementById("container").innerHTML = "Вы пока не добавили в избранное ни одного тура!"
         } else {
             renderTours(favoriteTours)
+            saveToLocalStorage()
         }
        
     })
@@ -383,7 +387,7 @@ async function sendFormData(event) {
     })
 }
 
-/*  function saveToLocalStorage() {
+  function saveToLocalStorage() {
 
     const toursJson = JSON.stringify(tours); 
     localStorage.setItem("tours", toursJson); 
@@ -393,7 +397,7 @@ const toursJson = localStorage.getItem("tours"); //преобразование 
 
 if (toursJson) {
   tours = JSON.parse(toursJson);
-}  */
+} 
 
 //отобразить все туры по клику
 let buttonAllTours = document.getElementById("allToursBtn")
@@ -401,8 +405,6 @@ let buttonAllTours = document.getElementById("allToursBtn")
 buttonAllTours.addEventListener("click", () => {
     renderTours(tours)
 })
-
-let favoritesTours = [] //массив с любимыми турами
 
 loadTours()
 init()
