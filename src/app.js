@@ -130,7 +130,7 @@ function renderTours(tours) {
             return idOfTours.id
         })
         
-        const isFavorite = IdOfFavoritesTours.includes(tour.id)
+        let isFavorite = IdOfFavoritesTours.includes(tour.id)
 
          if (isFavorite) {
             buttonAddToFavorite.style.display = "none"
@@ -139,10 +139,14 @@ function renderTours(tours) {
 
          buttonCancelFromFavorite.addEventListener("click", () => {
 
-            favoriteTours.splice(tour.id) //добавляем тур в любимые
+            let tourDelete = tours.find((findTour) => {
+                return findTour.id === id; //найти книгу по id
+              });
+              let tourIndex = tours.indexOf(tourDelete); 
+            tours.splice(tourIndex, 1) //
+         
 
         })
-        saveToLocalStorage()
     })
     }
 
@@ -281,7 +285,6 @@ function filterByPrice(tours, price) {
     })
 
     renderTours(filteredTours)
-    
 
     document.getElementById("minPrice").value = ""
     document.getElementById("maxPrice").value = ""
