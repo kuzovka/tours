@@ -327,30 +327,18 @@ async function init() {
     const tours = await loadTours()
     renderTours(tours)
 
+    const countryOption = Array.from(document.getElementsByClassName("dropdown__list-item"))
+
+    countryOption.forEach(countryOption => {
+        const country = countryOption.dataset.country
+        countryOption.addEventListener("click", () => filtredByCountry(tours, country))
+    })
+
+    // все страны не отображаются через dataset
     document
         .getElementById("allCountries")
         .addEventListener("click", () => filtredByCountry(tours))
-    document
-        .getElementById("tailand")
-        .addEventListener("click", () => filtredByCountry(tours, "Тайланд"))
-    document
-        .getElementById("egypt")
-        .addEventListener("click", () => filtredByCountry(tours, "Египет"))
-    document
-        .getElementById("cyprus")
-        .addEventListener("click", () => filtredByCountry(tours, "Кипр"))
-    document
-        .getElementById("maldives")
-        .addEventListener("click", () => filtredByCountry(tours, "Мальдивы"))
-    document
-        .getElementById("indonesia")
-        .addEventListener("click", () => filtredByCountry(tours, "Индонезия"))
-    document
-        .getElementById("mexico")
-        .addEventListener("click", () => filtredByCountry(tours, "Мексика"))
-    document
-        .getElementById("tanzania")
-        .addEventListener("click", () => filtredByCountry(tours, "Танзания"))
+
 
     document
         .getElementById("allRating")
